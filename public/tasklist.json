@@ -1,0 +1,25 @@
+[{
+        "date": "2020-09-12",
+        "name": "task1",
+        "desc": "☕ Software Engineer ☕",
+        "done": false,
+        "featured": false,
+        "category": "Business"
+    },
+    {
+        "date": "2019-05-26",
+        "name": "task2",
+        "desc": "❤ I Love JavaScript ❤",
+        "done": false,
+        "featured": true,
+        "category": "Personal"
+    },
+    {
+        "date": "2018-09-22",
+        "name": "task3",
+        "desc": "🥑 I Love ... 🥑",
+        "done": true,
+        "featured": false,
+        "category": "Personal"
+    }
+]

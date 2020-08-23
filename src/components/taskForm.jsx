@@ -1,8 +1,9 @@
 import React, { Component } from "react";
 import "bootstrap/dist/css/bootstrap.css";
 
-class AddTask extends Component {
+class TaskForm extends Component {
   state = {
+    id: "",
     name: "",
     date: "",
     category: "",
@@ -11,19 +12,21 @@ class AddTask extends Component {
     desc: "",
   };
   componentDidMount() {}
-  handleToggleAdd = () => {
-    this.props.handleToggle();
-  };
   handleChange(e) {
     const {name, value, checked, type} = e.target;
-    console.log(checked);
+    //console.log(checked);
     if(type === "checkbox") {
       this.setState({ [name]: checked });
     }
     else this.setState({ [name]: value });
   }
   handleAdd = (e) => {
+    e.preventDefault();
+    const min = 1;
+    const max = 1000;
+    const rand = Math.floor(Math.random()*(max-min+1)+min);
     const newTask = {
+      id: rand,
       name: this.state.name,
       date: this.state.date,
       category: this.state.category,
@@ -31,8 +34,6 @@ class AddTask extends Component {
       done: this.state.done ? true : false,
       featured: this.state.featured ? true : false,
     };
-    
-    e.preventDefault();
     this.props.addNewTask(newTask);
   };
   render() {
@@ -41,12 +42,6 @@ class AddTask extends Component {
     };
     return (
       <React.Fragment>
-        <button
-          className="btn btn-primary btn-md"
-          onClick={this.handleToggleAdd}
-        >
-          <i className="fa fa-plus" /> Add Task
-        </button>
         <form style={renderAddForm}>
           <div className="form-group row">
             <label htmlFor="date" className="col-sm-2 col-form-label">
@@ -169,4 +164,4 @@ class AddTask extends Component {
   }
 }
 
-export default AddTask;
+export default TaskForm;

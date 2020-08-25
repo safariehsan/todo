@@ -1,31 +1,32 @@
 import React, { Component } from "react";
 import Modal from "react-bootstrap/Modal";
-import _ from "lodash";
 import TaskForm from "./../components/taskForm";
-
 class Modall extends Component {
+  constructor(props) {
+    super(props);
+  }
   state = {
     showModal: true,
   };
   handleDelete = () => {
-    const allTasks = this.props.tasks;
-    const removingTask = allTasks.find((task) => task.id === this.props.taskId);
-    const updatedTasks = _.without(allTasks, removingTask);
-    this.props.handleDelete(updatedTasks);
-    //console.log("del");
+    this.props.handleRemove(this.props.taskId);
+    this.setState({ showModal: false });
   };
-  handleEdit = () => {};
+  handleEdit = (editedTask) => {
+    this.props.handleEdit(editedTask);
+    this.setState({ showModal: false });
+  };
   handleClose = () => {
     this.setState({ showModal: false });
   };
   handleAdd = (newtask) => {
     this.props.handleAdd(newtask);
     this.setState({ showModal: false });
-  }
+  };
   render() {
     const { editMode, addMode, removeMode, taskId, tasks } = this.props;
     let currentTask = {};
-    if (this.props.addMode === false)
+    if (this.props.removeMode === true || this.props.editMode === true)
       currentTask = tasks.find((task) => task.id === taskId);
     return (
       <Modal
@@ -35,9 +36,9 @@ class Modall extends Component {
       >
         <Modal.Header closeButton>
           <Modal.Title>
-            {editMode === true ? "Edit ":""}
-            {addMode === true ? "Add ":""}
-            {removeMode === true ? "Delete ":""}
+            {editMode === true ? "Edit " : ""}
+            {addMode === true ? "Add " : ""}
+            {removeMode === true ? "Delete " : ""}
             Task
           </Modal.Title>
         </Modal.Header>
@@ -45,31 +46,24 @@ class Modall extends Component {
           {removeMode === true ? (
             <p>Are you sure to remove *{currentTask.name}*</p>
           ) : addMode === true ? (
-            <TaskForm addNewTask={this.handleAdd} />
+            <TaskForm addNewTask={this.handleAdd} addMode={true} />
           ) : (
-            <TaskForm edittedTask={currentTask} />
+            <TaskForm editTask={this.handleEdit} task={currentTask} editMode={true} />
           )}
         </Modal.Body>
-        <Modal.Footer>
-          {removeMode === true ? (
+
+        {removeMode === true ? (
+          <Modal.Footer>
             <button
               className="btn btn-danger btn-sm"
               onClick={this.handleDelete}
             >
               Confirm
             </button>
-          ) : (
-            <button
-              className="btn btn-primary btn-sm"
-              onClick={this.handleEdit}
-            >
-              Edit
-            </button>
-          )}
-          <button className="btn btn-default btn-sm" onClick={this.handleClose}>
-            Cancel
-          </button>
-        </Modal.Footer>
+          </Modal.Footer>
+        ) : (
+          ""
+        )}
       </Modal>
     );
   }

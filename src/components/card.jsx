@@ -11,11 +11,17 @@ class Card extends Component {
   constructor(props) {
     super(props);
   }
-  onEdit = () => {};
-  onDelete = (updatedList) => {
-    //console.log(updatedList);
-    this.props.handleDelete(updatedList);
-    this.setState({modal: false})
+  onEdit = (task) => {
+    this.props.handleEdit(task);
+    this.setState({
+      modal: false,
+    });
+  };
+  onDelete = (taskId) => {
+    this.props.handleDelete(taskId);
+    this.setState({
+      modal: false,
+    });
   };
   onDetail = (taskId) => {
     //window.location = `/todo/detail/${taskId}`;
@@ -83,9 +89,21 @@ class Card extends Component {
                   </button>
                   <button
                     className="btn btn-outline-info btn-sm ml-2"
-                    onClick={() => this.onDetail(task.id)}
+                    onClick={() => {
+                      this.setState({
+                        taskId: task.id,
+                        modal: true,
+                        removeMode: false,
+                        editMode: true,
+                        addMode: false
+                      });
+                    }}
                   >
                     <i className="fa fa-eye" />
+                  </button>
+                  <button
+                    className="btn btn-outline-secondary btn-sm ml-2" disabled>
+                    {task.done === true ? <i className="fa fa-check" /> : <i className="fa fa-close" />}
                   </button>
                   {/* <Link
                     to={{
@@ -112,8 +130,8 @@ class Card extends Component {
             removeMode={this.state.removeMode}
             taskId={this.state.taskId}
             tasks={this.props.tasks}
-            handleDelete={this.onDelete}
-            
+            handleRemove={this.onDelete}
+            handleEdit={this.onEdit}
           />
         ) : (
           ""

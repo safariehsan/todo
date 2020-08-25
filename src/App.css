@@ -46,6 +46,14 @@
     padding: 0 !important;
 }
 
+.card {
+    transition: all .5s;
+}
+
+.card:hover {
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
 .taskcard:nth-child(3n+1) .card {
     margin-left: 0px !important;
 }

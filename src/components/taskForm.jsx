@@ -11,38 +11,61 @@ class TaskForm extends Component {
     done: false,
     desc: "",
   };
-  componentDidMount() {}
-  handleChange(e) {
-    const {name, value, checked, type} = e.target;
-    //console.log(checked);
-    if(type === "checkbox") {
-      this.setState({ [name]: checked });
+  componentDidMount() {
+    const prevTaskData = this.props.task;
+    if (this.props.editMode === true) {
+      //console.log(prevTaskData.name);
+      this.setState({
+        id: prevTaskData.id,
+        date: prevTaskData.date,
+        name: prevTaskData.name,
+        desc: prevTaskData.desc,
+        done: prevTaskData.done,
+        featured: prevTaskData.featured,
+        category: prevTaskData.category,
+      });
     }
-    else this.setState({ [name]: value });
+  }
+  handleChange(e) {
+    const { name, value, checked, type } = e.target;
+    if (type === "checkbox") {
+      this.setState({ [name]: checked });
+    } else this.setState({ [name]: value });
   }
   handleAdd = (e) => {
     e.preventDefault();
     const min = 1;
     const max = 1000;
-    const rand = Math.floor(Math.random()*(max-min+1)+min);
+    const rand = Math.floor(Math.random() * (max - min + 1) + min);
     const newTask = {
       id: rand,
-      name: this.state.name,
       date: this.state.date,
-      category: this.state.category,
+      name: this.state.name,
       desc: this.state.desc,
-      done: this.state.done ? true : false,
+      done: false,
       featured: this.state.featured ? true : false,
+      category: this.state.category,
     };
     this.props.addNewTask(newTask);
   };
-  render() {
-    const renderAddForm = {
-      display: this.props.addVisible ? "none" : "block",
+  handleEdit = (e) => {
+    e.preventDefault();
+    //console.log(this.state.id);
+    const editedTask = {
+      id: this.state.id,
+      date: this.state.date,
+      name: this.state.name,
+      desc: this.state.desc,
+      done: this.state.done ? true : false,
+      featured: this.state.featured ? true : false,
+      category: this.state.category,
     };
+    this.props.editTask(editedTask);
+  }
+  render() {
     return (
       <React.Fragment>
-        <form style={renderAddForm}>
+        <form>
           <div className="form-group row">
             <label htmlFor="date" className="col-sm-2 col-form-label">
               Date
@@ -53,6 +76,7 @@ class TaskForm extends Component {
                 className="form-control"
                 id="date"
                 name="date"
+                value={this.state.date}
                 onChange={this.handleChange.bind(this)}
               />
             </div>
@@ -68,6 +92,7 @@ class TaskForm extends Component {
                 id="name"
                 placeholder="Task Name"
                 name="name"
+                value={this.state.name}
                 onChange={this.handleChange.bind(this)}
               />
             </div>
@@ -83,10 +108,12 @@ class TaskForm extends Component {
                 id="desc"
                 name="desc"
                 placeholder="Description"
+                value={this.state.desc}
                 onChange={this.handleChange.bind(this)}
               />
             </div>
           </div>
+          {this.props.editMode === true ?
           <fieldset className="form-group">
             <div className="row">
               <legend className="col-form-label col-sm-2 pt-0">Status</legend>
@@ -98,7 +125,7 @@ class TaskForm extends Component {
                     name="status"
                     id="done"
                     name="done"
-                    value="done"
+                    checked={this.state.done}
                     onChange={this.handleChange.bind(this)}
                   />
                   <label className="form-check-label" htmlFor="done">
@@ -112,7 +139,7 @@ class TaskForm extends Component {
                     name="gridRadios"
                     id="notdone"
                     name="done"
-                    value=""
+                    checked={this.state.done}
                     onChange={this.handleChange.bind(this)}
                   />
                   <label className="form-check-label" htmlFor="notdone">
@@ -122,6 +149,7 @@ class TaskForm extends Component {
               </div>
             </div>
           </fieldset>
+          : ""}
           <div className="form-group row">
             <div className="col-sm-2">Featured</div>
             <div className="col-sm-10">
@@ -131,6 +159,7 @@ class TaskForm extends Component {
                   type="checkbox"
                   id="featured"
                   name="featured"
+                  checked={this.state.featured}
                   onChange={this.handleChange.bind(this)}
                 />
               </div>
@@ -139,8 +168,13 @@ class TaskForm extends Component {
           <div className="form-group row">
             <div className="col-sm-2">Category</div>
             <div className="col-sm-10">
-              <select className="form-control" name="category" onChange={this.handleChange.bind(this)}>
-                <option value="choose">Select Category</option>
+              <select
+                value={this.state.category}
+                className="form-control"
+                name="category"
+                onChange={this.handleChange.bind(this)}
+              >
+                <option value="default">Select Category</option>
                 <option value="Business">Business</option>
                 <option value="Personal">Personal</option>
                 <option value="Education">Education</option>
@@ -149,13 +183,23 @@ class TaskForm extends Component {
           </div>
           <div className="form-group row">
             <div className="col-sm-10">
-              <button
-                type="submit"
-                className="btn btn-success"
-                onClick={this.handleAdd}
-              >
-                Submit Form
-              </button>
+              {this.props.editMode === true ? (
+                <button
+                  type="submit"
+                  className="btn btn-success"
+                  onClick={this.handleEdit}
+                >
+                  Edit Form
+                </button>
+              ) : (
+                <button
+                  type="submit"
+                  className="btn btn-primary"
+                  onClick={this.handleAdd}
+                >
+                  Add Form
+                </button>
+              )}
             </div>
           </div>
         </form>

@@ -4,7 +4,9 @@ import Card from "../components/card";
 import axios from "axios";
 import Alert from "react-bootstrap/Alert";
 import Modall from "./../components/modal";
-import {toast} from 'react-toastify';
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import _ from "lodash";
 class ToDo extends Component {
   state = {
     tasks: [],
@@ -38,21 +40,32 @@ class ToDo extends Component {
     this.getTasks();
   }
 
-  deleteTask = (tasks) => {
-    localStorage.setItem("tasks", JSON.stringify(tasks));
-    this.setState({ tasks });
-    toast.error("a Task removed");
+  deleteTask = (taskId) => {
+    const removingTask = this.state.tasks.find((task) => task.id === taskId);
+    const updatedTasks = _.without(this.state.tasks, removingTask);
+    localStorage.setItem("tasks", JSON.stringify(updatedTasks));
+    this.setState({ tasks: updatedTasks });
+    toast.error(`${removingTask.name} removed!`);
   };
 
-  addTask = (newtask) => {
+  addTask = (newTask) => {
     const prevTasks = this.state.tasks;
-    prevTasks.push(newtask);
+    prevTasks.push(newTask);
     this.setState({
       tasks: prevTasks,
     });
     localStorage.setItem("tasks", JSON.stringify(this.state.tasks));
-    toast.success("a Task added");
-  }
+    toast.success(`${newTask.name} added!`);
+  };
+
+  editTask = (editedTask) => {
+    const { tasks } = this.state;
+    const editId = tasks.findIndex((t) => t.id === editedTask.id);
+    tasks[editId] = editedTask;
+    localStorage.setItem("tasks", JSON.stringify(tasks));
+    this.setState({ tasks });
+    toast.info(`${editedTask.name} edited!`);
+  };
 
   handleTableView = () => {
     this.setState({
@@ -66,15 +79,15 @@ class ToDo extends Component {
     });
   };
 
-  
   render() {
     return (
       <div className="container">
         <h1 className="mt-2">Application...!</h1>
+        <ToastContainer />
         <button
           className="btn btn-info btn-md"
           onClick={() => {
-            this.setState({ modal: true, editMode: true });
+            this.setState({ modal: true, addMode: true });
           }}
         >
           <i className="fa fa-plus" /> Add
@@ -117,19 +130,27 @@ class ToDo extends Component {
           <Alert variant="danger" className="mt-2">
             No task!
           </Alert>
-        ) : // <div className="alert alert-danger">No Task!</div>
-        this.state.viewMode === "table" ? (
-          <Table tasks={this.state.tasks} handleDelete={this.deleteTask} />
+        ) : this.state.viewMode === "table" ? (
+          <Table
+            tasks={this.state.tasks}
+            handleDelete={this.deleteTask}
+            handleEdit={this.editTask}
+          />
         ) : (
-          <Card tasks={this.state.tasks} handleDelete={this.deleteTask} />
+          <Card
+            tasks={this.state.tasks}
+            handleDelete={this.deleteTask}
+            handleEdit={this.editTask}
+          />
         )}
         {this.state.modal === true ? (
           <Modall
             show={true}
             addMode={this.state.addMode}
-            handleAdd={this.addTask}
-            removeMode={false}
             editMode={false}
+            removeMode={false}
+            handleAdd={this.addTask}
+            handleEdit={this.editTask}
             tasks={this.props.tasks}
           />
         ) : (

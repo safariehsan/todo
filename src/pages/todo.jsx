@@ -4,15 +4,20 @@ import Card from "../components/card";
 import axios from "axios";
 import Alert from "react-bootstrap/Alert";
 import Modall from "./../components/modal";
+import paginate from "./../components/paginate";
+import Pagination from "./../components/pagination";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import _ from "lodash";
+
 class ToDo extends Component {
   state = {
     tasks: [],
     viewMode: "card",
     modal: false,
     addMode: true,
+    pageSize: 6,
+    currentPage: 1
   };
   getTasks = () => {
     if (
@@ -79,7 +84,16 @@ class ToDo extends Component {
     });
   };
 
+  handlePageChange = (page) => {
+    this.setState({
+      currentPage: page
+    })
+  }
+
   render() {
+    const {length} = this.state.tasks;
+    const {pageSize, currentPage, tasks, viewMode} = this.state;
+    const todolist = paginate(tasks, currentPage, pageSize);
     return (
       <div className="container">
         <h1 className="mt-2">Application...!</h1>
@@ -95,7 +109,7 @@ class ToDo extends Component {
         <div className="btn-group btn-group-toggle ml-2" data-toggle="buttons">
           <label
             className={
-              this.state.viewMode === "table"
+              viewMode === "table"
                 ? "btn btn-success active"
                 : "btn btn-success"
             }
@@ -111,7 +125,7 @@ class ToDo extends Component {
           </label>
           <label
             className={
-              this.state.viewMode === "card"
+              viewMode === "card"
                 ? "btn btn-success active"
                 : "btn btn-success"
             }
@@ -126,23 +140,29 @@ class ToDo extends Component {
             Card View
           </label>
         </div>
-        {this.state.tasks.length === 0 ? (
+        {length === 0 ? (
           <Alert variant="danger" className="mt-2">
             No task!
           </Alert>
-        ) : this.state.viewMode === "table" ? (
+        ) : viewMode === "table" ? (
           <Table
-            tasks={this.state.tasks}
+            tasks={todolist}
             handleDelete={this.deleteTask}
             handleEdit={this.editTask}
           />
         ) : (
           <Card
-            tasks={this.state.tasks}
+            tasks={todolist}
             handleDelete={this.deleteTask}
             handleEdit={this.editTask}
           />
         )}
+        <Pagination 
+          itemsCount={length} 
+          pageSize={pageSize} 
+          onPageChange={this.handlePageChange}
+          currentPage={currentPage}
+        />
         {this.state.modal === true ? (
           <Modall
             show={true}

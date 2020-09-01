@@ -89,7 +89,6 @@ class TaskForm extends Component {
               <input
                 type="text"
                 className="form-control"
-                id="name"
                 placeholder="Task Name"
                 name="name"
                 value={this.state.name}
@@ -105,7 +104,6 @@ class TaskForm extends Component {
               <textarea
                 type="text"
                 className="form-control"
-                id="desc"
                 name="desc"
                 placeholder="Description"
                 value={this.state.desc}
@@ -114,41 +112,20 @@ class TaskForm extends Component {
             </div>
           </div>
           {this.props.editMode === true ?
-          <fieldset className="form-group">
-            <div className="row">
-              <legend className="col-form-label col-sm-2 pt-0">Status</legend>
-              <div className="col-sm-10">
-                <div className="form-check">
-                  <input
-                    className="form-check-input"
-                    type="radio"
-                    name="status"
-                    id="done"
-                    name="done"
-                    checked={this.state.done}
-                    onChange={this.handleChange.bind(this)}
-                  />
-                  <label className="form-check-label" htmlFor="done">
-                    Done
-                  </label>
-                </div>
-                <div className="form-check">
-                  <input
-                    className="form-check-input"
-                    type="radio"
-                    name="gridRadios"
-                    id="notdone"
-                    name="done"
-                    checked={this.state.done}
-                    onChange={this.handleChange.bind(this)}
-                  />
-                  <label className="form-check-label" htmlFor="notdone">
-                    Not Done
-                  </label>
-                </div>
-              </div>
-            </div>
-          </fieldset>
+           <div className="form-group row">
+           <div className="col-sm-2">Done</div>
+           <div className="col-sm-10">
+             <div className="form-check">
+               <input
+                 className="form-check-input"
+                 type="checkbox"
+                 name="done"
+                 checked={this.state.done}
+                 onChange={this.handleChange.bind(this)}
+               />
+             </div>
+           </div>
+         </div>
           : ""}
           <div className="form-group row">
             <div className="col-sm-2">Featured</div>
@@ -157,7 +134,6 @@ class TaskForm extends Component {
                 <input
                   className="form-check-input"
                   type="checkbox"
-                  id="featured"
                   name="featured"
                   checked={this.state.featured}
                   onChange={this.handleChange.bind(this)}

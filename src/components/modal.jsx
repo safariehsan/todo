@@ -16,6 +16,7 @@ class Modall extends Component {
     this.props.handleEdit(editedTask);
     this.setState({ showModal: false });
   };
+ 
   handleClose = () => {
     this.setState({ showModal: false });
   };
@@ -24,47 +25,96 @@ class Modall extends Component {
     this.setState({ showModal: false });
   };
   render() {
-    const { editMode, addMode, removeMode, taskId, tasks } = this.props;
+    const {
+      editMode,
+      addMode,
+      removeMode,
+      taskId,
+      tasks,
+      readMode,
+    } = this.props;
     let currentTask = {};
-    if (this.props.removeMode === true || this.props.editMode === true)
+    if (
+      this.props.removeMode === true ||
+      this.props.editMode === true ||
+      this.props.readMode === true
+    )
       currentTask = tasks.find((task) => task.id === taskId);
     return (
-      <Modal
-        show={this.state.showModal}
-        size={removeMode === true ? "sm" : "md"}
-        onHide={this.handleClose}
-      >
-        <Modal.Header closeButton>
-          <Modal.Title>
-            {editMode === true ? "Edit " : ""}
-            {addMode === true ? "Add " : ""}
-            {removeMode === true ? "Delete " : ""}
-            Task
-          </Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          {removeMode === true ? (
-            <p>Are you sure to remove *{currentTask.name}*</p>
-          ) : addMode === true ? (
-            <TaskForm addNewTask={this.handleAdd} addMode={true} />
-          ) : (
-            <TaskForm editTask={this.handleEdit} task={currentTask} editMode={true} />
-          )}
-        </Modal.Body>
-
-        {removeMode === true ? (
-          <Modal.Footer>
-            <button
-              className="btn btn-danger btn-sm"
-              onClick={this.handleDelete}
-            >
-              Confirm
-            </button>
-          </Modal.Footer>
-        ) : (
-          ""
+      <>
+        {removeMode && (
+          <Modal
+            show={this.state.showModal}
+            size="sm"
+            onHide={this.handleClose}
+          >
+            <Modal.Header closeButton>
+              <Modal.Title>Remove Task</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+              <p>Are you sure to remove *{currentTask.name}*</p>
+            </Modal.Body>
+            <Modal.Footer>
+              <button
+                className="btn btn-danger btn-sm"
+                onClick={this.handleDelete}
+              >
+                Confirm
+              </button>
+            </Modal.Footer>
+          </Modal>
         )}
-      </Modal>
+        {editMode && (
+          <Modal
+            show={this.state.showModal}
+            size="md"
+            onHide={this.handleClose}
+          >
+            <Modal.Header closeButton>
+              <Modal.Title>Edit Task</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+              <TaskForm
+                editTask={this.handleEdit}
+                task={currentTask}
+                editMode={true}
+              />
+            </Modal.Body>
+          </Modal>
+        )}
+        {addMode && (
+          <Modal
+            show={this.state.showModal}
+            size="md"
+            onHide={this.handleClose}
+          >
+            <Modal.Header closeButton>
+              <Modal.Title>Add Task</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+              <TaskForm addNewTask={this.handleAdd} addMode={true} />
+            </Modal.Body>
+          </Modal>
+        )}
+        {readMode && (
+          <Modal
+            show={this.state.showModal}
+            size="md"
+            onHide={this.handleClose}
+          >
+            <Modal.Header closeButton>
+              <Modal.Title>View Task</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+              <TaskForm
+               
+                task={currentTask}
+                readMode={true}
+              />
+            </Modal.Body>
+          </Modal>
+        )}
+      </>
     );
   }
 }

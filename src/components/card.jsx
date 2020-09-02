@@ -6,7 +6,10 @@ class Card extends Component {
   state = {
     modal: false,
     taskId: 0,
+    removeMode: false,
+    addMode: false,
     editMode: false,
+    readMode: false
   };
   constructor(props) {
     super(props);
@@ -67,7 +70,8 @@ class Card extends Component {
                         modal: true,
                         removeMode: false,
                         editMode: true,
-                        addMode: false
+                        addMode: false,
+                        readMode: false
                       });
                     }}
                   >
@@ -81,7 +85,8 @@ class Card extends Component {
                         modal: true,
                         removeMode: true,
                         editMode: false,
-                        addMode: false
+                        addMode: false,
+                        readMode: false
                       });
                     }}
                   >
@@ -94,8 +99,9 @@ class Card extends Component {
                         taskId: task.id,
                         modal: true,
                         removeMode: false,
-                        editMode: true,
-                        addMode: false
+                        editMode: false,
+                        addMode: false,
+                        readMode: true
                       });
                     }}
                   >
@@ -128,6 +134,7 @@ class Card extends Component {
             editMode={this.state.editMode}
             addMode={this.state.addMode}
             removeMode={this.state.removeMode}
+            readMode={this.state.readMode}
             taskId={this.state.taskId}
             tasks={this.props.tasks}
             handleRemove={this.onDelete}

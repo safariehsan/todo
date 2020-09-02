@@ -1,14 +1,12 @@
-import React, { Component } from "react";
-import {NavLink, Link} from 'react-router-dom';
+import React from "react";
+import { NavLink, Link } from "react-router-dom";
 
-class NavBar extends Component {
-  state = {};
-  render() {
-    return (
-      <nav className="navbar navbar-expand-lg navbar-light bg-light">
-       <div className="container">
-       <Link className="navbar-brand" to="/">
-          To-Do App
+const NavBar = () => {
+  return (
+    <nav className="navbar navbar-expand-lg navbar-light bg-light">
+      <div className="container">
+        <Link className="navbar-brand" to="/">
+          <img src="globe2.png" className="App-logo" />
         </Link>
         <button
           className="navbar-toggler"
@@ -24,20 +22,19 @@ class NavBar extends Component {
         <div className="collapse navbar-collapse" id="navbarNav">
           <ul className="navbar-nav">
             <NavLink className="nav-item nav-link" to="/home">
-                Home <span className="sr-only">(current)</span>
+              Home <span className="sr-only">(current)</span>
             </NavLink>
             <NavLink className="nav-item nav-link" to="/about">
-                About
+              About
             </NavLink>
             <NavLink className="nav-item nav-link" to="/todo">
-                ToDo
+              ToDo
             </NavLink>
           </ul>
         </div>
-       </div>
-      </nav>
-    );
-  }
-}
+      </div>
+    </nav>
+  );
+};
 
 export default NavBar;
